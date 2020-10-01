@@ -1,0 +1,27 @@
+n = Network("GreekNet", routing="dijkstra")
+h0 = n.addHost("edge_0", cpuCores=16, ram=64, storage=1000)
+h11 = n.addHost("edge_1-1", cpuCores=16, ram=64, storage=1000)
+h12 = n.addHost("edge_1-2", cpuCores=16, ram=64, storage=1000)
+h21 = n.addHost("edge_2-1", cpuCores=16, ram=64, storage=1000)
+h22 = n.addHost("edge_2-2", cpuCores=16, ram=64, storage=1000)
+n.printHosts()
+
+l01 = n.addLink(h0, h11, bandwidth=10, delay=1)
+l02 = n.addLink(h0, h12, bandwidth=10, delay=1)
+l1112 = n.addLink(h11, h12, bandwidth=10, delay=1)
+l1121 = n.addLink(h11, h21, bandwidth=10, delay=1)
+l1222 = n.addLink(h12, h22, bandwidth=10, delay=1)
+l2122 = n.addLink(h21, h22, bandwidth=10, delay=1)
+n.printLinks()
+
+n.printTopology()
+
+s0 = n.addService("cache", cpuCores=1, ram=2, storage=2)
+n.printServices()
+
+vm0 = n.instantiateService(s0, h0)
+vm1 = n.instantiateService(s0, h11)
+vm2 = n.instantiateService(s0, h12)
+
+vmChain0 = n.addChain([vm0, vm1, vm2], bidirectional=True)
+
